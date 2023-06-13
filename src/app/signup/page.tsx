@@ -34,19 +34,22 @@ export default function SignIn() {
       password: data.get("password"),
     });
     axios
-      .post("http://localhost:3001/api/auth/login", {
+      .post("http://localhost:3001/api/auth/signup", {
         email: data.get("email"),
         password: data.get("password"),
       })
       .then((data) => {
-        const res = data.data as LoginResponse;
-        window.alert("ログインしました");
-        document.cookie = `access_token=${res.access_token}`;
-        router.push("/");
+        const res = data.data as {
+          email: string;
+          id: number;
+        };
+        window.alert("登録が完了しました。ログインしてください。");
+        router.push("/login");
       })
       .catch((error) => {
-        if (error.response.status === 401) {
-          window.alert("パスワードまたはメールアドレスに誤りがあります");
+        if (error.response.status === 409) {
+          window.alert("入力したメールアドレスは登録されています");
+          router.push("/login");
         } else {
           window.alert("エラーが発生しました");
         }
@@ -69,7 +72,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            ログイン
+            サインアップ
           </Typography>
           <Box
             component="form"
@@ -103,12 +106,12 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              ログイン
+              登録
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"ユーザー作成がまだの方はこちら"}
+                <Link href="/login" variant="body2">
+                  {"ユーザー作成が済んでいる方"}
                 </Link>
               </Grid>
             </Grid>
