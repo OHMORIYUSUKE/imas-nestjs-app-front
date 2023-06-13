@@ -10,7 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Avatar } from "@mui/material";
+import { Avatar, Box, Button, TextField } from "@mui/material";
 import { Footer } from "./component/footer";
 import { Header } from "./component/header";
 
@@ -103,6 +103,13 @@ export default function Home() {
   const [idolsData, setIdolsData] =
     useState<(IGetIdolInfo & { image?: string })[]>();
   const [isLoading, setIsLoading] = useState(true);
+  const [searchWord, setSearchWord] = useState("");
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    setSearchWord(data.get("search") as string);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,7 +127,9 @@ export default function Home() {
           Authorization: `Bearer ${token}`,
         };
         axios
-          .get("http://localhost:3001/api/idols/search", { headers })
+          .get(`http://localhost:3001/api/idols/search?name=${searchWord}`, {
+            headers,
+          })
           .then((data) => {
             const res = data.data as IGetIdolInfoArray & { image?: string };
             setIdolsData(res);
@@ -142,7 +151,7 @@ export default function Home() {
     };
 
     fetchData();
-  }, []);
+  }, [searchWord]);
 
   if (!idolsData) {
     return <>ロード中...</>;
@@ -150,63 +159,118 @@ export default function Home() {
   return (
     <>
       <Header></Header>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+        sx={{ mt: 1 }}
+        display={"flex"}
+      >
+        <TextField
+          type="text"
+          fullWidth
+          id="outlined-basic"
+          label="検索(名前)"
+          variant="outlined"
+          name="search"
+        />
+        <Button variant="contained" type="submit">
+          検索
+        </Button>
+      </Box>
       <TableContainer component={Paper}>
         <Table sx={{ width: "100%" }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>顔写真</TableCell>
-              <TableCell>ソートID</TableCell>
-              <TableCell>リソースID</TableCell>
-              <TableCell>タイプ</TableCell>
-              <TableCell>名前</TableCell>
-              <TableCell>表示名</TableCell>
-              <TableCell>姓</TableCell>
-              <TableCell>名</TableCell>
-              <TableCell>英語名</TableCell>
-              <TableCell>フルネーム（ルビ）</TableCell>
-              <TableCell>年齢</TableCell>
-              <TableCell>出身地</TableCell>
-              <TableCell>利き手</TableCell>
-              <TableCell>身長</TableCell>
-              <TableCell>体重</TableCell>
-              <TableCell>趣味</TableCell>
-              <TableCell>特技</TableCell>
-              <TableCell>お気に入り</TableCell>
-              <TableCell>CV</TableCell>
-              <TableCell>カラーコード</TableCell>
-              <TableCell>誕生日</TableCell>
-              <TableCell>星座</TableCell>
-              <TableCell>血液型</TableCell>
-              <TableCell>スリーサイズ</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>ID</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>顔写真</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>ソートID</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>リソースID</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>タイプ</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>名前</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>姓</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>名</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>英語名</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>
+                フルネーム（ルビ）
+              </TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>年齢</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>出身地</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>利き手</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>身長</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>体重</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>趣味</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>特技</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>お気に入り</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>CV</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>
+                カラーコード
+              </TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>誕生日</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>星座</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>血液型</TableCell>
+              <TableCell style={{ whiteSpace: "nowrap" }}>
+                スリーサイズ
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {idolsData.map((row) => (
               <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>{row.id}</TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
                   <Avatar alt="顔写真" src={row.image} />
                 </TableCell>
-                <TableCell>{row.sortId}</TableCell>
-                <TableCell>{row.resourceId}</TableCell>
-                <TableCell>{TypeEnum[row.type]}</TableCell>
-                <TableCell>{row.fullName}</TableCell>
-                <TableCell>{row.displayName}</TableCell>
-                <TableCell>{row.lastName}</TableCell>
-                <TableCell>{row.firstName}</TableCell>
-                <TableCell>{row.alphabetName}</TableCell>
-                <TableCell>{row.fullNameRuby}</TableCell>
-                <TableCell>{row.age}</TableCell>
-                <TableCell>{row.birthplace.name}</TableCell>
-                <TableCell>{row.handednessType.name}</TableCell>
-                <TableCell>{row.height}</TableCell>
-                <TableCell>{row.weight}</TableCell>
-                <TableCell>{row.hobby}</TableCell>
-                <TableCell>{row.speciality}</TableCell>
-                <TableCell>{row.favorites}</TableCell>
-                <TableCell>{row.cv}</TableCell>
-                <TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.sortId}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.resourceId}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {TypeEnum[row.type]}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.fullName}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.lastName}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.firstName}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.alphabetName}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.fullNameRuby}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.age}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.birthplace.name}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.handednessType.name}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.height}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.weight}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.hobby}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.speciality}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.favorites}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>{row.cv}</TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
                   {row.colorCode}
                   <Avatar
                     sx={{ bgcolor: row.colorCode, width: 24, height: 24 }}
@@ -214,10 +278,16 @@ export default function Home() {
                     {" "}
                   </Avatar>
                 </TableCell>
-                <TableCell>{`${row.birthday.month}月${row.birthday.day}日`}</TableCell>
-                <TableCell>{row.constellation.name}</TableCell>
-                <TableCell>{row.bloodType.name}</TableCell>
-                <TableCell>
+                <TableCell
+                  style={{ whiteSpace: "nowrap" }}
+                >{`${row.birthday.month}月${row.birthday.day}日`}</TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.constellation.name}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
+                  {row.bloodType.name}
+                </TableCell>
+                <TableCell style={{ whiteSpace: "nowrap" }}>
                   {`${row.measurements.bust}-${row.measurements.waist}-${row.measurements.hip}`}
                 </TableCell>
               </TableRow>
