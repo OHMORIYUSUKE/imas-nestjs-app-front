@@ -11,6 +11,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Avatar } from "@mui/material";
+import { Footer } from "./component/footer";
+import { Header } from "./component/header";
 
 export type IGetIdolInfoArray = IGetIdolInfo[];
 export type IGetIdolInfo = {
@@ -147,6 +149,7 @@ export default function Home() {
   }
   return (
     <>
+      <Header></Header>
       <TableContainer component={Paper}>
         <Table sx={{ width: "100%" }} aria-label="simple table">
           <TableHead>
@@ -222,6 +225,7 @@ export default function Home() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Footer></Footer>
     </>
   );
 }
