@@ -153,7 +153,7 @@ export default function Home() {
     fetchData();
   }, [searchWord]);
 
-  if (!idolsData) {
+  if (isLoading || !idolsData) {
     return <>ロード中...</>;
   }
   return (
