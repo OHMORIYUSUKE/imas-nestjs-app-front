@@ -1,6 +1,7 @@
 import { IGetIdolInfo } from "@/app/types/idol";
 import {
   Avatar,
+  Box,
   IconButton,
   TableBody,
   TableCell,
@@ -137,10 +138,15 @@ export const TableBodyRowField: FC<Props> = ({ row }) => {
       <TableCell style={{ whiteSpace: "nowrap" }}>{row.favorites}</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>{row.cv}</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>
-        {row.colorCode}
-        <Avatar sx={{ bgcolor: row.colorCode, width: 24, height: 24 }}>
-          {" "}
-        </Avatar>
+        <Box display={"flex"}>
+          <Avatar
+            sx={{ bgcolor: row.colorCode, width: 24, height: 24 }}
+            style={{ marginRight: "10px" }}
+          >
+            {" "}
+          </Avatar>
+          {row.colorCode}
+        </Box>
       </TableCell>
       <TableCell
         style={{ whiteSpace: "nowrap" }}
