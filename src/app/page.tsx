@@ -10,7 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Avatar, Box, Button, TextField } from "@mui/material";
+import { Avatar, Box, Button, LinearProgress, TextField } from "@mui/material";
 import { Footer } from "./component/footer";
 import { Header } from "./component/header";
 import { IGetIdolInfo } from "./types/idol";
@@ -76,9 +76,6 @@ export default function Home() {
     fetchData();
   }, [searchWord]);
 
-  if (isLoading || !idolsData) {
-    return <>ロード中...</>;
-  }
   return (
     <>
       <Header></Header>
@@ -115,12 +112,20 @@ export default function Home() {
       <TableContainer sx={{ maxHeight: 670 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHeaderField />
-          <TableBodyField idolsData={idolsData} />
+          {isLoading || !idolsData ? (
+            <></>
+          ) : (
+            <TableBodyField idolsData={idolsData} />
+          )}
         </Table>
       </TableContainer>
-      <TableContainer component={Paper}>
-        <Table sx={{ width: "100%" }} aria-label="simple table"></Table>
-      </TableContainer>
+      {isLoading || !idolsData ? (
+        <>
+          <LinearProgress />
+        </>
+      ) : (
+        <></>
+      )}
       <Footer></Footer>
     </>
   );
