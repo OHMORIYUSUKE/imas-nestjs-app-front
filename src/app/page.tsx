@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,89 +13,9 @@ import Paper from "@mui/material/Paper";
 import { Avatar, Box, Button, TextField } from "@mui/material";
 import { Footer } from "./component/footer";
 import { Header } from "./component/header";
-
-export type IGetIdolInfoArray = IGetIdolInfo[];
-export type IGetIdolInfo = {
-  id: number;
-  sortId: number;
-  resourceId: string;
-  type: TypeEnum;
-  fullName: string;
-  displayName: string;
-  lastName: string;
-  firstName: string | null;
-  alphabetName: string;
-  fullNameRuby: string;
-  age: number | null;
-  birthplace: Birthplace;
-  handednessType: HandednessType;
-  height: number;
-  weight: number;
-  hobby: string;
-  speciality: string;
-  favorites: string;
-  cv: string;
-  colorCode: string;
-  birthday: Birthday;
-  constellation: Constellation;
-  bloodType: BloodType;
-  measurements: Measurements;
-};
-declare enum TypeEnum {
-  Princess = 1,
-  Fairy = 2,
-  Angel = 3,
-  Ex = 5,
-}
-type Birthplace = {
-  id: number;
-  name: string;
-};
-declare enum HandednessTypeIdEnum {
-  _0 = 0,
-  _1 = 1,
-  _2 = 2,
-}
-declare enum HandednessTypeNameEnum {
-  None = "\u8A2D\u5B9A\u306A\u3057",
-  Right = "\u53F3",
-  Left = "\u5DE6",
-}
-type HandednessType = {
-  id: HandednessTypeIdEnum;
-  name: HandednessTypeNameEnum;
-};
-type Birthday = {
-  month: number;
-  day: number;
-};
-type Constellation = {
-  id: number;
-  name: string;
-};
-declare enum BloodTypeIdEnum {
-  _0 = 0,
-  _1 = 1,
-  _2 = 2,
-  _3 = 3,
-  _4 = 4,
-}
-declare enum BloodTypeNameEnum {
-  None = "\u8A2D\u5B9A\u306A\u3057",
-  A = "A",
-  B = "B",
-  AB = "AB",
-  O = "O",
-}
-type BloodType = {
-  id: BloodTypeIdEnum;
-  name: BloodTypeNameEnum;
-};
-type Measurements = {
-  bust: number;
-  waist: number;
-  hip: number;
-};
+import { IGetIdolInfo } from "./types/idol";
+import { TableBodyField } from "./component/table/body";
+import { TableHeaderField } from "./component/table/header";
 
 export default function Home() {
   const router = useRouter();
@@ -131,7 +51,7 @@ export default function Home() {
             headers,
           })
           .then((data) => {
-            const res = data.data as IGetIdolInfoArray & { image?: string };
+            const res = data.data as (IGetIdolInfo & { image?: string })[];
             setIdolsData(res);
             setIsLoading(false);
           })
@@ -159,12 +79,22 @@ export default function Home() {
   return (
     <>
       <Header></Header>
+      <Box height={70}></Box>
       <Box
         component="form"
         onSubmit={handleSubmit}
         noValidate
-        sx={{ mt: 1 }}
-        display={"flex"}
+        sx={{
+          mt: 1,
+          position: "fixed",
+          top: 50,
+          left: 0,
+          right: 0,
+          zIndex: 999,
+        }}
+        display="flex"
+        p={2}
+        bgcolor="background.paper"
       >
         <TextField
           type="text"
@@ -178,122 +108,15 @@ export default function Home() {
           検索
         </Button>
       </Box>
-      <TableContainer component={Paper}>
-        <Table sx={{ width: "100%" }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ whiteSpace: "nowrap" }}>ID</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>顔写真</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>ソートID</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>リソースID</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>タイプ</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>名前</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>姓</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>名</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>英語名</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>
-                フルネーム（ルビ）
-              </TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>年齢</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>出身地</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>利き手</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>身長</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>体重</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>趣味</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>特技</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>お気に入り</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>CV</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>
-                カラーコード
-              </TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>誕生日</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>星座</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>血液型</TableCell>
-              <TableCell style={{ whiteSpace: "nowrap" }}>
-                スリーサイズ
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {idolsData.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell style={{ whiteSpace: "nowrap" }}>{row.id}</TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  <Avatar alt="顔写真" src={row.image} />
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.sortId}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.resourceId}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {TypeEnum[row.type]}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.fullName}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.lastName}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.firstName}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.alphabetName}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.fullNameRuby}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.age}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.birthplace.name}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.handednessType.name}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.height}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.weight}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.hobby}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.speciality}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.favorites}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>{row.cv}</TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.colorCode}
-                  <Avatar
-                    sx={{ bgcolor: row.colorCode, width: 24, height: 24 }}
-                  >
-                    {" "}
-                  </Avatar>
-                </TableCell>
-                <TableCell
-                  style={{ whiteSpace: "nowrap" }}
-                >{`${row.birthday.month}月${row.birthday.day}日`}</TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.constellation.name}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {row.bloodType.name}
-                </TableCell>
-                <TableCell style={{ whiteSpace: "nowrap" }}>
-                  {`${row.measurements.bust}-${row.measurements.waist}-${row.measurements.hip}`}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+      <Box height={70}></Box>
+      <TableContainer sx={{ maxHeight: 670 }}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHeaderField />
+          <TableBodyField idolsData={idolsData} />
         </Table>
+      </TableContainer>
+      <TableContainer component={Paper}>
+        <Table sx={{ width: "100%" }} aria-label="simple table"></Table>
       </TableContainer>
       <Footer></Footer>
     </>
