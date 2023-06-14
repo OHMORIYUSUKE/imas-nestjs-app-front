@@ -6,7 +6,7 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -26,7 +26,7 @@ type Props = {
 export const TableBodyRowField: FC<Props> = ({ row }) => {
   const router = useRouter();
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(row.favorite);
 
   const onFavorite = (idolId: number) => {
     const key = "access_token";
@@ -49,7 +49,8 @@ export const TableBodyRowField: FC<Props> = ({ row }) => {
         headers,
       })
       .then((data) => {
-        // window.alert("いいねしました");
+        window.alert("いいねしました");
+        setIsFavorite(!isFavorite);
       })
       .catch((error) => {
         window.alert("いいね時にエラーです");
@@ -75,21 +76,23 @@ export const TableBodyRowField: FC<Props> = ({ row }) => {
         headers,
       })
       .then((data) => {
-        // window.alert("いいねを取り消しました");
+        window.alert("いいねを取り消しました");
+        setIsFavorite(!isFavorite);
       })
       .catch((error) => {
         window.alert("いいねを取り消し時にエラーです");
       });
   };
+
   return (
     <TableRow key={row.id}>
       <TableCell style={{ whiteSpace: "nowrap" }}>
-        {row.favorite || isFavorite ? (
+        {isFavorite ? (
           <IconButton
             color={"warning"}
             aria-label="add an alarm"
             onClick={() => {
-              setIsFavorite(!isFavorite), onRemoveFavorite(row.id);
+              onRemoveFavorite(row.id);
             }}
           >
             <FavoriteIcon />
@@ -99,13 +102,14 @@ export const TableBodyRowField: FC<Props> = ({ row }) => {
             color={"warning"}
             aria-label="add an alarm"
             onClick={() => {
-              setIsFavorite(!isFavorite), onFavorite(row.id);
+              onFavorite(row.id);
             }}
           >
             <FavoriteBorderIcon />
           </IconButton>
         )}
       </TableCell>
+
       <TableCell style={{ whiteSpace: "nowrap" }}>{row.id}</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>
         <Avatar alt="顔写真" src={row.image} />
