@@ -100,7 +100,7 @@ export default function Home() {
           type="text"
           fullWidth
           id="outlined-basic"
-          label="検索(名前)"
+          label="アイドルの名前で検索"
           variant="outlined"
           name="search"
         />

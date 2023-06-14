@@ -9,7 +9,7 @@ export const Footer: FC<Props> = ({}) => (
       variant="body2"
       color="text.secondary"
       align="center"
-      sx={{ mt: 8, mb: 4 }}
+      sx={{ mt: 4, mb: 4 }}
     >
       {"Copyright © "}
       <Link color="inherit" href="">
