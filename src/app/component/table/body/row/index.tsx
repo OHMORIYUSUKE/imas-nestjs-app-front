@@ -10,6 +10,8 @@ import { FC, useState } from "react";
 
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 declare enum TypeEnum {
   Princess = 1,
@@ -19,18 +21,72 @@ declare enum TypeEnum {
 }
 
 type Props = {
-  row: IGetIdolInfo & { image?: string };
+  row: IGetIdolInfo & { image?: string; favorite: boolean };
 };
 export const TableBodyRowField: FC<Props> = ({ row }) => {
-  const [isFavorit, setIsFavorit] = useState(false);
+  const router = useRouter();
+
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const onFavorite = (idolId: number) => {
+    const key = "access_token";
+    const value = document.cookie.match(new RegExp(key + "=([^;]*);*"));
+    if (value === null) {
+      window.alert("ログインしてください");
+      router.push("/login");
+      return;
+    }
+    const token = value[1];
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+    const body = {
+      idolId: idolId,
+    };
+    axios
+      .post("http://localhost:3001/api/idols/favorite", body, {
+        headers,
+      })
+      .then((data) => {
+        window.alert("いいねしました");
+      })
+      .catch((error) => {});
+  };
+
+  const onRemoveFavorite = (idolId: number) => {
+    const key = "access_token";
+    const value = document.cookie.match(new RegExp(key + "=([^;]*);*"));
+    if (value === null) {
+      window.alert("ログインしてください");
+      router.push("/login");
+      return;
+    }
+    const token = value[1];
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    axios
+      .delete(`http://localhost:3001/api/idols/favorite/${idolId}`, {
+        headers,
+      })
+      .then((data) => {
+        window.alert("いいねを取り消しました");
+      })
+      .catch((error) => {});
+  };
   return (
     <TableRow key={row.id}>
       <TableCell style={{ whiteSpace: "nowrap" }}>
-        {isFavorit ? (
+        {row.favorite ? (
           <IconButton
             color={"warning"}
             aria-label="add an alarm"
-            onClick={() => setIsFavorit(!isFavorit)}
+            onClick={() => {
+              setIsFavorite(!isFavorite), onRemoveFavorite(row.id);
+            }}
           >
             <FavoriteIcon />
           </IconButton>
@@ -38,7 +94,9 @@ export const TableBodyRowField: FC<Props> = ({ row }) => {
           <IconButton
             color={"warning"}
             aria-label="add an alarm"
-            onClick={() => setIsFavorit(!isFavorit)}
+            onClick={() => {
+              setIsFavorite(!isFavorite), onFavorite(row.id);
+            }}
           >
             <FavoriteBorderIcon />
           </IconButton>

@@ -21,7 +21,7 @@ export default function Home() {
   const router = useRouter();
 
   const [idolsData, setIdolsData] =
-    useState<(IGetIdolInfo & { image?: string })[]>();
+    useState<(IGetIdolInfo & { image?: string; favorite: boolean })[]>();
   const [isLoading, setIsLoading] = useState(true);
   const [searchWord, setSearchWord] = useState("");
 
@@ -51,7 +51,10 @@ export default function Home() {
             headers,
           })
           .then((data) => {
-            const res = data.data as (IGetIdolInfo & { image?: string })[];
+            const res = data.data as (IGetIdolInfo & {
+              image?: string;
+              favorite: boolean;
+            })[];
             setIdolsData(res);
             setIsLoading(false);
           })

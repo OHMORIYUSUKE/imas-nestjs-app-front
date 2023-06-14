@@ -20,7 +20,7 @@ declare enum TypeEnum {
 }
 
 type Props = {
-  idolsData: (IGetIdolInfo & { image?: string })[];
+  idolsData: (IGetIdolInfo & { image?: string; favorite: boolean })[];
 };
 export const TableBodyField: FC<Props> = ({ idolsData }) => (
   <TableBody>
