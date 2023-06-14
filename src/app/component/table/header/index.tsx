@@ -3,16 +3,18 @@ import { TableCell, TableHead, TableRow } from "@mui/material";
 export const TableHeaderField = () => (
   <TableHead>
     <TableRow>
+      <TableCell style={{ whiteSpace: "nowrap" }}>いいね</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>ID</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>顔写真</TableCell>
-      <TableCell style={{ whiteSpace: "nowrap" }}>ソートID</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>リソースID</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>タイプ</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>名前</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>姓</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>名</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>英語名</TableCell>
-      <TableCell style={{ whiteSpace: "nowrap" }}>フルネーム（ルビ）</TableCell>
+      <TableCell style={{ whiteSpace: "nowrap" }}>
+        フルネーム（ひらがな）
+      </TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>年齢</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>出身地</TableCell>
       <TableCell style={{ whiteSpace: "nowrap" }}>利き手</TableCell>
