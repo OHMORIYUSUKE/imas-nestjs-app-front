@@ -10,7 +10,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Avatar, Box, Button, LinearProgress, TextField } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  FormControlLabel,
+  LinearProgress,
+  Switch,
+  TextField,
+} from "@mui/material";
 import { Footer } from "./component/footer";
 import { Header } from "./component/header";
 import { IGetIdolInfo } from "./types/idol";
@@ -23,6 +31,7 @@ export default function Home() {
   const [idolsData, setIdolsData] =
     useState<(IGetIdolInfo & { image?: string; favorite: boolean })[]>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isFavoriteOnly, setIsFavoriteOnly] = useState(false);
   const [searchWord, setSearchWord] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -46,8 +55,11 @@ export default function Home() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
+        const url = isFavoriteOnly
+          ? "http://localhost:3001/api/idols/favorite"
+          : `http://localhost:3001/api/idols/search?name=${searchWord}`;
         axios
-          .get(`http://localhost:3001/api/idols/search?name=${searchWord}`, {
+          .get(url, {
             headers,
           })
           .then((data) => {
@@ -74,7 +86,7 @@ export default function Home() {
     };
 
     fetchData();
-  }, [searchWord]);
+  }, [searchWord, isFavoriteOnly]);
 
   return (
     <>
@@ -109,6 +121,17 @@ export default function Home() {
         </Button>
       </Box>
       <Box height={70}></Box>
+      <Box ml={2} mt={1}>
+        <FormControlLabel
+          control={
+            <Switch
+              defaultChecked={isFavoriteOnly}
+              onChange={() => setIsFavoriteOnly(!isFavoriteOnly)}
+            />
+          }
+          label="「いいね」したアイドルのみ表示"
+        />
+      </Box>
       <TableContainer sx={{ maxHeight: 670 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHeaderField />
