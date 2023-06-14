@@ -49,7 +49,7 @@ export const TableBodyRowField: FC<Props> = ({ row }) => {
         headers,
       })
       .then((data) => {
-        window.alert("いいねしました");
+        // window.alert("いいねしました");
         setIsFavorite(!isFavorite);
       })
       .catch((error) => {
@@ -76,7 +76,7 @@ export const TableBodyRowField: FC<Props> = ({ row }) => {
         headers,
       })
       .then((data) => {
-        window.alert("いいねを取り消しました");
+        // window.alert("いいねを取り消しました");
         setIsFavorite(!isFavorite);
       })
       .catch((error) => {
